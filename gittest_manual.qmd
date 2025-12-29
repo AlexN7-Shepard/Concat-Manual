@@ -1,0 +1,228 @@
+---
+title: "📗 Git Manual"
+date: last-modified
+author:
+  - name: Alexandre Gbocho
+  - name: Peter Kraus
+format: html
+---
+
+# Introduction
+
+## Why another Useless Git Tutorial?
+
+I genuinely hate Git (Peter will confirm). As I am not a native English speaker, all this fancy software engineering terminology tends to give me a headache, so here I kept things as simple as possible. Why use Git? Why can't we just send each other codes via e-mail in zip files?
+
+- Git is a powerful tool for managing and collaborating on projects, especially in a team. It allows different team members to collaborate smoothly since each member can add their contribution without disturbing others. It makes sense to use Git on complex projects.
+- If you're reading this, it probably means your boss or colleagues want you to use it, so you don't have a choice.
+
+Git is not easy software to master, so as much as I tried to keep it simple, it might get technical.
+
+# Prerequisites: Boring but useful (also applies to other software)
+
+Before we suffer through Git, let's define some basics about your computer environment. 
+
+## Terminals & Shells
+
+**Command Prompt (cmd)** is the old-school Windows shell. **PowerShell** is the modern version used for automation. VS Code's bottom panel simply hosts these—check the tab title or prompt (`PS C:\` vs `C:\`) to know which one you are on. To switch, click the dropdown next to the `+` icon $\to$ "Select Default Profile".
+
+| Feature | CMD | PowerShell |
+|:---|:---|:---|
+| **Best for** | Basic commands, legacy stuff | Complex scripts, admin tasks |
+| **Vibe** | "It works, don't touch it" | "I have superpowers" |
+
+## The PATH (Important)
+The **PATH** is your computer address book. If you type `python` and the terminal says "command not found," it means Python is not in the address book.
+* **Fix:** When installing tools (Python, VS Code, Git), **always** check the box that says "Add to PATH." It saves you a massive headache later.
+
+## Virtual Environments
+
+Environments are non-negotiable. They keep your project libraries isolated so an update in Project A doesn't break Project B.
+
+### 1. Standard and lighter (`.venv`)
+Built into Python. Lightweight and standard.
+* **Create:** `python -m venv .venv`
+* **Activate (Windows):** `.\.venv\Scripts\Activate`
+* **Activate (Mac/Linux):** `source .venv/bin/activate`
+
+### 2. The Data Science / Engineering (Conda) approch
+Use this if you need specific Python versions or heavy libraries (like for Machine Learning).
+* **Create:** `conda create --name myenv python=3.9`
+* **Activate:** `conda activate myenv`
+
+:::{.callout-important}
+### Pro-Tip: .gitignore
+**Never** upload your environment folder to GitHub. It's huge and useless to others.
+Create a file named `.gitignore` in your root folder and simply write `.venv/` (or `env/`) inside. Git will now pretend it doesn't exist.
+:::
+
+# Generalities and Terminology
+
+## Installing Git : 
+First and easiest step is to install Git on your computer (with the adequate path): 
+Just follow the instruction of the following link : 
+https://git-scm.com/install/
+
+## What is Git?
+
+Git is a Distributed Version Control System (DVCS), mainly used for teamwork.
+
+*So how does it work?*
+
+Each developer (you or a co-worker) has a complete **local** copy of the entire project repository, including its full history. These local copies allow you to work offline and make changes locally.
+
+But of course, the goal is not to keep changes local forever. You will need to "upload" (or *push*) your code online (to a *remote* server). *GitHub* and *GitLab* are platforms that provide servers used as *remotes* for hosting your code.
+
+Few important concepts:
+- **Repository**: Place where all the versions of your files and their complete change history are stored. It can be local (specific folder on your own computer) or remote (the one which lives on a cloud server.. GitHub !)
+- **Branch**: Represents an independent line of development, allowing you to work on new features or fixes without affecting the main project.
+- **Commit**: A new version of the code that you "save" at a certain point in time (a snapshot). It tracks progress; if something goes bad, you can always go back to the previous one. Each commit gets a unique ID (SHA hash).
+- **Pushing and Pulling**: The process of synchronizing between the local and a remote repository. **Pushing** is SENDING your local changes to the remote. **Pulling** is FETCHING changes from the remote repo and *merging* them into your local repository.
+- **Merging**: Combining different lines of development (*branches*). Conflicts in files modified by two people at the same time are normally resolved by merging.
+
+To "upload" your file(s) onto an existing repository on GitHub:
+
+1.  Assume you have the files properly set in a folder locally.
+2.  Use `git add <name of the file>`
+3.  Use `git commit -m "<insert a message>"` (useful for your colleagues to know what is going on).
+4.  `git push`
+
+How merging happens:
+- Locally, merging one local *branch* into another.
+- Locally, merging *remote* changes into your local *branch* (via `git pull`).
+- On the remote (upstream), when a Pull Request (PR) has been accepted. This is basically merging via the web interface on GitHub.
+# Overview
+
+## Git Account and websites
+
+## Start 
+To be able to work on your own repository, you will need to log-in on GitHub (or GitLab). 
+The GitHub website looks like a social network for programmers where you can share all of your open sources 
+project, as you can see here : 
+- You can add a profile picture 
+- Update your status and so on. 
+- For both GitHub and GitLab. 
+Even though GitLab is more for enterprise, private set-ups. 
+On the Github website, the "repositories" section is on the top left, you just have to clic on "new" to create a new one. 
+![Screenshot 1 : GitHub homepage](./git-tutorial-home.png)
+# GitHub Specificities
+
+## Generating the SSH Key
+
+:::{.callout-note}
+You have to do this once in your GitHub profile to be able to upload any file. A similar process is required for GitLab.
+:::
+
+An SSH keypair is used for secure authentication. To generate your SSH key, please follow the instructions on the official Git website:
+[Generating a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+
+# Starting a project with Git
+
+There are two primary ways to begin: cloning an existing repository or initializing a new one locally.
+
+First, go to the GitHub website and create a new repository. Then, create a git repository in VS Code.
+
+In a specific folder on your computer, use `git init` to create an offline repository. It creates a hidden `.git` folder containing all the metadata Git needs.
+
+### Step 1: Adding the File to the Commit Stage
+
+![Screenshot 2 : Git Init via VS code](./git-manual/image1-initialization.png)
+
+To commit something, you first need to add it. `git add <name of the file>` or `git add .` is necessary. Be aware that `git add .` adds **every** changed file in the folder to the commit stage.
+
+Some interesting features with `git add`:
+
+- `git add -u`: Adds only modified or deleted files (no new files).
+- `git add *.txt`: Adds files by pattern (useful for adding only `.jl` or `.py` files).
+- `git add -p`: Advanced. Lets you choose which specific chunks of code to add (`y` to stage, `n` to skip, `s` to split the chunk).
+
+## Step 2: Commit Stage
+
+The commit records the changes staged by `git add`. The command `git commit -m "<your message>"` is a classic, but there are other options to use Git's full potential:
+
+- `git commit -v`: Shows the changes you are committing (diff) between the last version and your local version.
+- `git commit --amend -m "<your message>"`: Allows you to modify the message of your previous commit **BEFORE** you push it.
+
+![Screenshot 3 : Commit via VS Code](./git-manual/image2-first-commit.png)
+
+## Step 3: Pushing
+
+The next step is to show the world your work. Concretely, what does `git push` do?
+
+- It uploads the changes from your local branch to the remote branch.
+- It shares your work with colleagues.
+- It stores your commit on a remote server.
+
+![Screenshot 4 : Pushing for the first time](./git-manual/image3-first-push.png)
+
+1.  `git remote add <name> <url>`, e.g., `git remote add origin https://github.com/AlexN7-Shepard/Easygit`.
+2.  For the first push: `git push -u origin <branch-name>`. This sets up the connection between your local branch and the origin (upstream).
+
+VS Code gives you access to a lot of Git Extensions. Peter does not recommend extensions for VS Code, but I am using **GitLens** here to track changes.
+
+![Screenshot 5 : GitLens](./git-manual/image4-gitlens-demo.png)
+
+You can also use **Git Graph** (Ctrl + Shift + P to access command palette).
+
+![Screenshot 6 : A nice tree](./git-manual/image5-branches-vizualisation.png)
+
+# Working with the website : 
+
+You can perform the same tasks directly on the website (Peter, is not the biggest fan of this method) but it can help 
+to understand when you start. Developers tend to prefer using directly using VS code. 
+
+![Screenshot 7 : Before pushing](./git-manual/pushing.png)
+![Screenshot 8 : Before pushing](./git-manual/pushed.png)
+## Joining the Party
+
+Scenario: People have been working on a project before you, and you were just assigned a task.
+
+1.  Create an empty folder locally.
+2.  Open the terminal in that folder.
+3.  `git clone <URL of the project>`
+
+Now you are up to date.
+
+### `git pull` and `git fetch`
+
+When collaborating, you need to stay in touch with updates.
+-   `git pull`: Downloads the latest changes and **merges** them directly into your current repository. Straightforward, but can lead to conflicts.
+-   `git fetch`: "Downloads" the changes but does **not** merge them. It gives you control over when to integrate changes.
+
+### `git cherry-pick`
+
+A useful command (I personally hate it) is `git cherry-pick`. It allows you to apply a specific commit from one branch to another. You're basically saying, "I want this specific change, but not all the other garbage in that branch."
+
+### `git push` (Again)
+
+Use `git push` to send your work.
+* `git push --force`: Overwrites the remote branch (dangerous).
+* `git push --force-with-lease`: Safer, checks if the remote branch has been updated before you nuke it.
+
+## Set of Definitions
+
+-   **HEAD**: A pointer to your current position in your local repository.
+-   `git log`: Views the history of changes (who did what and when).
+-   `git status`: Displays the state of your working directory (untracked files, staged changes, etc.).
+
+## Workflow and Small Tips
+
+Sometimes your repo might not be visible or accessible. The command `git remote -v` allows you to view all connected remote repositories. It helps debug connection issues.
+
+-   `git rebase`: Integrates changes by moving your commits on top of a new base. It rewrites history (cleaner), whereas `git merge` creates a "merge commit" (messier).
+-   `.gitignore`: As mentioned in the basics, this file specifies which files Git should strictly ignore.
+
+## Useful VS Code Extensions
+-   **GitLens** / **GitGraph**: Visualize branches and history.
+-   **GitHistory**: GUI tools for browsing history and file blame.
+-   **GitKraken**: A dedicated Git GUI client (outside VS Code).
+
+# Conclusion
+
+This tutorial just covers the basics. Git is complicated, and things are (unfortunately) not going to be as linear as described here.
+
+I inspired myself from the git tutorial of Matthew Evans: [Link](https://github.com/ml-evs/git-tutorial).
+
+Good luck!
+
+![Screenshot 6 : last commands](./git-manual/image6-git-help-menu.png)
